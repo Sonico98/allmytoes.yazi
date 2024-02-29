@@ -11,10 +11,7 @@ function M:peek()
 	end
 
 	local t = io.open(tostring(cache), "r")
-	while t == nil do
-		ya.sleep(0.2)
-	end
-
+	if t == nil then return 0 end
 	local thumb = Url(t:read())
 	t:close()
 
@@ -31,20 +28,20 @@ function M:preload()
 	end
 
 	local output = Command("allmytoes")
-		:args({"-sxx", tostring(self.file.url)})
+		:args({ "-sxx", tostring(self.file.url) })
 		:stdout(Command.PIPED)
 		:stderr(Command.PIPED)
 		:output()
 
 	if not output.status:success() then
 		ya.err(
-			"Could not obtain thumbnail for "..tostring(self.file.url)
-			..". allmytoes output: "..tostring(output.stderr)
+			"Could not obtain thumbnail for " .. tostring(self.file.url)
+			.. ". allmytoes output: " .. tostring(output.stderr)
 		)
-		return false
+		return 0
 	end
 
-	local thumb = string.gsub(tostring(output.stdout),"\n","")
+	local thumb = string.gsub(tostring(output.stdout), "\n", "")
 	return fs.write(cache, thumb) and 1 or 2
 end
 

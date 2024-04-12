@@ -12,6 +12,9 @@ git clone https://github.com/Sonico98/allmytoes.yazi.git ~/.config/yazi/plugins/
 
 ## Usage
 
+For the time being, it's recommended to follow [these steps](https://github.com/Sonico98/allmytoes.yazi/issues/1#issuecomment-2052600806) instead.
+<details>
+<summary>Old instructions, not working for now</summary>
 Add this to your `yazi.toml`:
 
 ```toml
@@ -23,7 +26,7 @@ exec = "allmytoes"
 mime = "image/*"
 exec = "allmytoes"
 ```
-
+</details>
 Make sure you have AllMyToes [installed](https://gitlab.com/allmytoes/allmytoes#installation) and in your PATH.
 
 ## Why would I want this instead of the default image previewer?

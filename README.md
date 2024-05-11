@@ -27,6 +27,7 @@ mime = "image/*"
 exec = "allmytoes"
 ```
 </details>
+
 Make sure you have AllMyToes [installed](https://gitlab.com/allmytoes/allmytoes#installation) and in your PATH.
 
 ## Why would I want this instead of the default image previewer?

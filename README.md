@@ -13,18 +13,33 @@ git clone https://github.com/Sonico98/allmytoes.yazi.git ~/.config/yazi/plugins/
 ## Usage
 
 For the time being, it's recommended to follow [these steps](https://github.com/Sonico98/allmytoes.yazi/issues/1#issuecomment-2052600806) instead.
+
+If you build yazi from source, starting from [commit c2affae](https://github.com/sxyazi/yazi/commit/c2affae3a9e7d33e69fc5a2d6dfb01dd252e25b0) you can add the following to your `yazi.toml` configuration file:
 <details>
-<summary>Old instructions, not working for now</summary>
+<summary>Only compatible with commit c2affae or higher (or yazi 0.2.6, to be released)</summary>
 Add this to your `yazi.toml`:
 
 ```toml
-[[plugin.prepend_previewers]]
-mime = "image/*"
-exec = "allmytoes"
+[plugin]
+prepend_previewers = [
+	# Allmytoes doesn't handle these by default
+	{ mime = "image/svg+xml", run = "magick" },
+	{ mime = "image/heic",    run = "magick" },
+	{ mime = "image/jxl",     run = "magick" },
+	# Handle other image types with allmytoes
+	{ mime = "image/*", run = "allmytoes" },
+]
 
-[[plugin.prepend_preloaders]]
-mime = "image/*"
-exec = "allmytoes"
+prepend_preloaders = [
+	# Allmytoes doesn't handle these by default
+	{ mime = "image/svg+xml", run = "magick" },
+	{ mime = "image/heic",    run = "magick" },
+	{ mime = "image/jxl",     run = "magick" },
+	# Handle other image types with allmytoes
+	{ mime = "image/*", run = "allmytoes" },
+]
+
+
 ```
 </details>
 

@@ -33,7 +33,25 @@ function M:preload()
 		:stderr(Command.PIPED)
 		:output()
 
-	if not output.status:success() then
+	-- yazi 0.2.5
+	local function check_output_v025()
+		if output.status:success() then
+			return true
+		end
+		return false
+	end
+
+	-- yazi 0.3
+	local function check_output_v03()
+		if output.status.success then
+			return true
+		end
+		return false
+	end
+
+	if pcall(check_output_v03) then
+	elseif pcall(check_output_v025) then
+	else
 		ya.err(
 			"Could not obtain thumbnail for " .. tostring(self.file.url)
 			.. ". allmytoes output: " .. tostring(output.stderr)

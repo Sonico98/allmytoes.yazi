@@ -1,12 +1,12 @@
 local M = {}
 
-function M:peek()
-	local cache = ya.file_cache(self)
+function M:peek(job)
+	local cache = ya.file_cache(job)
 	if not cache then
 		return
 	end
 
-	if not self:preload() then
+	if not self:preload(job) then
 		return
 	end
 
@@ -15,20 +15,20 @@ function M:peek()
 	local thumb = Url(t:read())
 	t:close()
 
-	ya.image_show(thumb, self.area)
-	ya.preview_widgets(self, {})
+	ya.image_show(thumb, job.area)
+	ya.preview_widgets(job, {})
 end
 
 function M:seek() end
 
-function M:preload()
-	local cache = ya.file_cache(self)
+function M:preload(job)
+	local cache = ya.file_cache(job)
 	if not cache or fs.cha(cache) then
 		return 1
 	end
 
 	local output = Command("allmytoes")
-		:args({ "-sxx", tostring(self.file.url) })
+		:args({ "-sxx", tostring(job.file.url) })
 		:stdout(Command.PIPED)
 		:stderr(Command.PIPED)
 		:output()
@@ -53,7 +53,7 @@ function M:preload()
 	elseif pcall(check_output_v025) then
 	else
 		ya.err(
-			"Could not obtain thumbnail for " .. tostring(self.file.url)
+			"Could not obtain thumbnail for " .. tostring(job.file.url)
 			.. ". allmytoes output: " .. tostring(output.stderr)
 		)
 		return 0

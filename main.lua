@@ -24,7 +24,7 @@ function M:seek() end
 function M:preload(job)
 	local cache = ya.file_cache(job)
 	if not cache or fs.cha(cache) then
-		return 1
+		return true
 	end
 
 	local output = Command("allmytoes")
@@ -52,15 +52,14 @@ function M:preload(job)
 	if pcall(check_output_v03) then
 	elseif pcall(check_output_v025) then
 	else
-		ya.err(
+		return false, Err(
 			"Could not obtain thumbnail for " .. tostring(job.file.url)
 			.. ". allmytoes output: " .. tostring(output.stderr)
 		)
-		return 0
 	end
 
 	local thumb = string.gsub(tostring(output.stdout), "\n", "")
-	return fs.write(cache, thumb) and 1 or 2
+	return fs.write(cache, thumb) and true or false
 end
 
 return M

@@ -28,7 +28,7 @@ function M:preload(job)
 	end
 
 	local output = Command("allmytoes")
-		:args({ "-sxx", tostring(job.file.url) })
+		:arg({ "-sxx", tostring(job.file.url) })
 		:stdout(Command.PIPED)
 		:stderr(Command.PIPED)
 		:output()

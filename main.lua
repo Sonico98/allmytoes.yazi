@@ -1,3 +1,11 @@
+local options = ya.sync(
+	function(state)
+		return {
+			sizes = state.sizes,
+		}
+	end
+)
+
 local M = {}
 
 function M:peek(job)
@@ -19,7 +27,11 @@ function M:peek(job)
 	ya.preview_widgets(job, {})
 end
 
-function M:seek() end
+function M:seek() end -- TODO? Iterate through all different sized previews
+
+function M:setup(args)
+	self.sizes = args and args.sizes or { "n", "l", "x", "xx" }
+end
 
 function M:preload(job)
 	local cache = ya.file_cache(job)
@@ -27,39 +39,48 @@ function M:preload(job)
 		return true
 	end
 
-	local output = Command("allmytoes")
-		:arg({ "-sxx", tostring(job.file.url) })
-		:stdout(Command.PIPED)
-		:stderr(Command.PIPED)
-		:output()
-
-	-- yazi 0.2.5
-	local function check_output_v025()
-		if output.status:success() then
-			return true
+	-- Helper function to check if a value exists in a list
+	local function has_value(tbl, val)
+		for _, v in ipairs(tbl) do
+			if v == val then return true end
 		end
 		return false
 	end
 
-	-- yazi 0.3
-	local function check_output_v03()
+	local opt_sizes = options().sizes
+
+	-- Determine which thumbnail size should be used in the preview
+	local all_sizes = { "n", "l", "x", "xx" }
+	local biggest_size = nil
+	for _, size in ipairs(all_sizes) do
+		if has_value(opt_sizes, size) then biggest_size = size end
+	end
+
+	local thumb_to_display = nil
+	for _, size in ipairs(opt_sizes or all_sizes) do
+		local output = Command("allmytoes")
+			:arg({ "-s" .. size, tostring(job.file.url) })
+			:stdout(Command.PIPED)
+			:stderr(Command.PIPED)
+			:output()
+
 		if output.status.success then
-			return true
+			if size == biggest_size then
+				thumb_to_display = string.gsub(tostring(output.stdout), "\n", "")
+			end
+		else
+			ya.err(
+				"Could not obtain " .. size .. " thumbnail for " .. tostring(job.file.url)
+				.. ". allmytoes output: " .. tostring(output.stderr)
+			)
 		end
+	end
+
+	if thumb_to_display ~= nil then
+		return fs.write(cache, thumb_to_display) and true or false
+	else
 		return false
 	end
-
-	if pcall(check_output_v03) then
-	elseif pcall(check_output_v025) then
-	else
-		return false, Err(
-			"Could not obtain thumbnail for " .. tostring(job.file.url)
-			.. ". allmytoes output: " .. tostring(output.stderr)
-		)
-	end
-
-	local thumb = string.gsub(tostring(output.stdout), "\n", "")
-	return fs.write(cache, thumb) and true or false
 end
 
 return M

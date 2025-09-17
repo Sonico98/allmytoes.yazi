@@ -6,18 +6,15 @@ Generate and preview freedesktop-compatible thumbnails for images on [Yazi](http
 
 ```sh
 # Linux only
-git clone https://github.com/Sonico98/allmytoes.yazi.git ~/.config/yazi/plugins/allmytoes.yazi
+ya pkg add Sonico98/allmytoes.yazi
 
 ```
 
 ## Usage
 
-For the time being, it's recommended to follow [these steps](https://github.com/Sonico98/allmytoes.yazi/issues/1#issuecomment-2052600806) instead.
-
-If you build yazi from source, starting from [commit c2affae](https://github.com/sxyazi/yazi/commit/c2affae3a9e7d33e69fc5a2d6dfb01dd252e25b0) you can add the following to your `yazi.toml` configuration file:
+Add the following to your `~/.config/yazi/yazi.toml` configuration file
 <details>
-<summary>Only compatible with commit c2affae or higher (or yazi 0.2.6, to be released)</summary>
-Add this to your `yazi.toml`:
+<summary>yazi.toml: </summary>
 
 ```toml
 [plugin]
@@ -45,6 +42,16 @@ prepend_preloaders = [
 
 Make sure you have AllMyToes [installed](https://gitlab.com/allmytoes/allmytoes#installation) and in your PATH.
 
+## Configuration
+It's possible to decide which thumbnail sizes should be generated. Add the following to your `~/.config/yazi/init.lua` file:
+```
+require("allmytoes"):setup {
+    -- By default, all sizes are generated. Remove the ones you don't need.
+    sizes = {"n", "l", "x", "xx"},
+}
+```
+Generating all sizes guarantees thumbnails will be instantly available for other clients that request freedesktop thumbs. This can, however, affect yazi's performance the first time a thumbnail has to be generated.
+
 ## Why would I want this instead of the default image previewer?
 
 ### Compatibility 
@@ -54,5 +61,3 @@ Because the thumbnails follow the freedesktop spec, they can be generated from a
 ### Fast
 
 Once generated, yazi will display the largest thumbnail directly the next time you use it. It works just like how the default previewer caches images, but in a multi-application compatible way, and persistent across reboots by default.
-In my limited, not benchmarked tests, I could notice faster image previews in directories containing multiple large images using allmytoes than with the default previewer.
-

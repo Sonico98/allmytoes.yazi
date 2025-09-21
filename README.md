@@ -44,7 +44,7 @@ Make sure you have AllMyToes [installed](https://gitlab.com/allmytoes/allmytoes#
 
 ## Configuration
 It's possible to decide which thumbnail sizes should be generated. Add the following to your `~/.config/yazi/init.lua` file:
-```
+```lua
 require("allmytoes"):setup {
     -- By default, all sizes are generated. Remove the ones you don't need.
     sizes = {"n", "l", "x", "xx"},

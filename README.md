@@ -6,7 +6,7 @@ Generate and preview freedesktop-compatible thumbnails for images on [Yazi](http
 
 ```sh
 # Linux only
-ya pkg add Sonico98/allmytoes.yazi
+ya pkg add Sonico98/allmytoes
 
 ```
 

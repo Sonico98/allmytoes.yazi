@@ -14,8 +14,9 @@ function M:peek(job)
 		return
 	end
 
-	if not self:preload(job) then
-		return
+	local ok, err = self:preload(job)
+	if not ok or err then
+		return ya.preview_widget(job, err)
 	end
 
 	local t = io.open(tostring(cache), "r")
@@ -23,8 +24,8 @@ function M:peek(job)
 	local thumb = Url(t:read())
 	t:close()
 
-	ya.image_show(thumb, job.area)
-	ya.preview_widgets(job, {})
+	local _, err = ya.image_show(thumb, job.area)
+	ya.preview_widget(job, err)
 end
 
 function M:seek() end -- TODO? Iterate through all different sized previews

@@ -1,7 +1,7 @@
 local options = ya.sync(
 	function(state)
 		return {
-			sizes = state.sizes,
+			sizes = state.sizes or { "n", "l", "x", "xx" },
 		}
 	end
 )
@@ -31,7 +31,7 @@ end
 function M:seek() end -- TODO? Iterate through all different sized previews
 
 function M:setup(args)
-	self.sizes = args and args.sizes or { "n", "l", "x", "xx" }
+	self.sizes = args and args.sizes
 end
 
 function M:preload(job)
